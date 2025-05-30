@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card {% if notice.is_important %}border-danger{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h2 class="card-title">
+                            {% if notice.is_important %}
+                            <span class="badge bg-danger me-2">Important</span>
+                            {% endif %}
+                            {{ notice.title }}
+                        </h2>
+                        <span class="badge bg-primary">{{ notice.get_notice_type_display }}</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-muted">
+                            <i class="fas fa-building"></i> Department: {{ notice.get_department_display }}
+                        </h6>
+                        <h6 class="text-muted">
+                            <i class="fas fa-user"></i> Posted by: {{ notice.created_by.get_full_name|default:notice.created_by.username }}
+                        </h6>
+                        <h6 class="text-muted">
+                            <i class="fas fa-clock"></i> Posted on: {{ notice.created_at|date:"F j, Y" }}
+                        </h6>
+                        {% if notice.valid_until %}
+                        <h6 class="text-muted">
+                            <i class="fas fa-calendar-alt"></i> Valid until: {{ notice.valid_until|date:"F j, Y" }}
+                        </h6>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-text mb-4">
+                        {{ notice.content|linebreaks }}
+                    </div>
+
+                    {% if is_admin %}
+                    <div class="btn-group">
+                        <a href="{% url 'notice_edit' notice.pk %}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit Notice
+                        </a>
+                        <a href="{% url 'notice_delete' notice.pk %}" class="btn btn-outline-danger">
+                            <i class="fas fa-trash"></i> Delete Notice
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a href="{% url 'notice_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Notices
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
